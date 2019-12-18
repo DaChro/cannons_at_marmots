@@ -1,11 +1,8 @@
-
-
+library(keras)
 
 #load vgg16 as base
 conv_base <- application_vgg16(weights = "imagenet", include_top = FALSE, input_shape = c (224,224,3))
 
-#load Unet model
-modelU <- unet(input_shape = c(128, 128, 3))
 
 # optionally freeze to prevent new training
 freeze_weights(conv_base)
@@ -17,7 +14,7 @@ test_model <- conv_base$layers[[7]]$output %>% layer_dropout(rate = 0.5)
 conclayer1 <- conv_base$layers[[6]]$output
 conclayer2 <- conv_base$layers[[3]]$output
 
-# and now add the upward curve of the U
+# add the second part of 'U' for segemntation
 
 #conv
 test_model <- layer_conv_2d(test_model, dtype = "float32", filters = 256, kernel_size = 3, padding = "same", data_format = "channels_last", activation = "relu", kernel_initializer = "VarianceScaling" )
